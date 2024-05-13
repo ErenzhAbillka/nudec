@@ -1,25 +1,26 @@
 #include "stm32f10x.h"                  // Device header
-#include "USART.h"
 
-/****
-	* 舵机初始化设置
-	* 引脚设置: PA1: Servo_Down, PA2: Servo_Up
-	* 注意事项: Servo_Down调用范围: 0 - 50
-	*			Servo_Up调用范围: 110 - 90
-	*/
-	
 void PWM_Init(void)
 {
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
 	
-	GPIO_InitTypeDef GPIO_InitStructure1;
-	GPIO_InitStructure1.GPIO_Mode = GPIO_Mode_AF_PP;
-	GPIO_InitStructure1.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_2;
-	GPIO_InitStructure1.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOA, &GPIO_InitStructure1);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_6 | GPIO_Pin_7; //通道1 | 通道2 | 通道2 | 通道3
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1; //通道3 | 通道4
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	
 	TIM_InternalClockConfig(TIM2);
+	TIM_InternalClockConfig(TIM3);
 	
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
 	TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
@@ -29,7 +30,42 @@ void PWM_Init(void)
 	TIM_TimeBaseInitStructure.TIM_RepetitionCounter = 0;
 	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseInitStructure);
 	
+	TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+	TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseInitStructure.TIM_Period = 20000 - 1;		//ARR
+	TIM_TimeBaseInitStructure.TIM_Prescaler = 72 - 1;		//PSC
+	TIM_TimeBaseInitStructure.TIM_RepetitionCounter = 0;
+	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseInitStructure);
+	
 	TIM_OCInitTypeDef TIM_OCInitStructure;
+	
+	TIM_OCStructInit(&TIM_OCInitStructure);
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+	TIM_OCInitStructure.TIM_Pulse = 0;		//CCR
+	TIM_OC1Init(TIM3, &TIM_OCInitStructure);//A6
+	
+	TIM_OCStructInit(&TIM_OCInitStructure);
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+	TIM_OCInitStructure.TIM_Pulse = 0;
+	TIM_OC2Init(TIM3, &TIM_OCInitStructure);//A7
+	
+	TIM_OCStructInit(&TIM_OCInitStructure);
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+	TIM_OCInitStructure.TIM_Pulse = 0;
+	TIM_OC3Init(TIM3, &TIM_OCInitStructure);//B0
+	
+	TIM_OCStructInit(&TIM_OCInitStructure);
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+	TIM_OCInitStructure.TIM_Pulse = 0;
+	TIM_OC4Init(TIM3, &TIM_OCInitStructure);//B1
 	
 	TIM_OCStructInit(&TIM_OCInitStructure);
 	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
@@ -45,31 +81,67 @@ void PWM_Init(void)
 	TIM_OCInitStructure.TIM_Pulse = 0;
 	TIM_OC3Init(TIM2, &TIM_OCInitStructure);//A2
 
-	
 	TIM_Cmd(TIM2, ENABLE);
+	TIM_Cmd(TIM3, ENABLE);
 }
 
-void PWM_SetCompare1(uint16_t Compare)			//A1
+
+
+/***********************************
+*设定PWM
+************************************/
+void PWM_SetCompare1(uint16_t Compare)
+{
+	TIM_SetCompare1(TIM3, Compare);
+}
+
+void PWM_SetCompare2(uint16_t Compare)
+{
+	TIM_SetCompare2(TIM3, Compare);
+}
+
+void PWM_SetCompare3(uint16_t Compare)
+{
+	TIM_SetCompare3(TIM3, Compare);
+}
+
+void PWM_SetCompare4(uint16_t Compare)
+{
+	TIM_SetCompare4(TIM3, Compare);
+}
+
+void PWM1_SetCompare2(uint16_t Compare)
 {
 	TIM_SetCompare2(TIM2, Compare);
 }
 
-void PWM_SetCompare2(uint16_t Compare)			//A2
+void PWM1_SetCompare3(uint16_t Compare)
 {
 	TIM_SetCompare3(TIM2, Compare);
 }
 
-//范围：0-180
-void Servo_Down(float Angle)					//A1					//从右往左0-50
+
+/***********************************
+*舵机设定
+***********************************/
+void servoOneDown(float Angle)	//A1			
+{
+	PWM1_SetCompare2(Angle / 180 * 2000 + 500);
+}
+
+void servoOneUp(float Angle)	//A2			
+{
+	PWM1_SetCompare3(Angle / 180 * 2000 + 500);
+}
+
+void servoTwoDown(float Angle)	//A6			
 {
 	PWM_SetCompare1(Angle / 180 * 2000 + 500);
 }
 
-void Servo_Up(float Angle)						//A2					//从下往上110-90//30
+void servoTwoUp(float Angle)	//A7		
 {
 	PWM_SetCompare2(Angle / 180 * 2000 + 500);
 }
-
-
 
 

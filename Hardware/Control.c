@@ -2,6 +2,7 @@
 #include "KEY.h"
 #include "SERIAL.h"
 #include "CONTROL.h"
+#include "DELAY.h"
 
 /****
 	* 控制程序
@@ -10,8 +11,17 @@
 	* PB10: 执行基本程序
 	* PB11: 执行发挥程序
 	*/
+	
+void Reset(void)
+{
+	PWM_Init();
+	servoTwoDown(30);
+	servoTwoUp(90);
+}
+
 void Control(void)
 {
+	Key_Init();
 	uint8_t KeyNum = Key_GetNum();
 	if (KeyNum == 1)
 	{
@@ -27,12 +37,6 @@ void Control(void)
 	}
 }
 
-void Reset(void)
-{
-	PWM_Init();											//舵机1复位
-//	servoOneDown(30);
-//	servoOneUp(90);
-}
 
 void Basic_Task(void)
 {

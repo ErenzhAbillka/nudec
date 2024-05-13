@@ -6,15 +6,16 @@
 #include "PID.h"
 #include "MATHUSE.h"
 #include "TIMER.h"
+#include "KEY.h"
 
 
 int main()
 {
 	/* 初始化 */
-	Serial_Init();
+//	Serial_Init();
 	OLED_Init();
 	PWM_Init();
-	Timer_Init();
+//	Timer_Init();
 	/* END */
 
 	/* 常驻外设控制*/
@@ -22,10 +23,8 @@ int main()
 	/* END */
 	while(1)
 	{
-		OLED_ShowNum(1, 1, Serial_RxPacket[0], 3);
-		OLED_ShowNum(2, 1, Serial_RxPacket[1], 3);
-//		OLED_ShowNum(3, 1, Serial_RxPacket[2], 3);
-//		OLED_ShowNum(4, 1, Serial_RxPacket[3], 3);
+		Control();
+		OLED_ShowString(2, 1, "B");
 	}
 	
 }

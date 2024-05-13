@@ -56,16 +56,17 @@ float PID_Down(void)
 	PIDX_Init();
 	float targetAngleX = angle_ConversionX();
 	float Actual = Get_AngleDown();
-	float output;
+	float output, theta;
 	
 	pid.Error = targetAngleX - Actual;
 	pid.Error_Sum = pid.Error;
 	
-	output = pid.kp * pid.Error
+	theta = pid.kp * pid.Error
 		   + pid.ki * pid.Error_Sum
 		   + pid.kp * (pid.Error - pid.Error_Last);
 	pid.Error_Last = pid.Error;
 	
+	output = theta + Actual;
 	if(output > 50) output = 50;											//оч╥Ы								 
 	if(output < 0)	 output = 0;
 	return output;
@@ -77,16 +78,17 @@ float PID_Up(void)
 	PIDY_Init();
 	float targetAngleY = angle_ConversionY();
 	float Actual = Get_AngleUp();
-	float output;
+	float output, theta;
 	
 	pid.Error = targetAngleY - Actual;
 	pid.Error_Sum = pid.Error;
 	
-	output = pid.kp * pid.Error
+	theta = pid.kp * pid.Error
 		   + pid.ki * pid.Error_Sum
 		   + pid.kp * (pid.Error - pid.Error_Last);
 	pid.Error_Last = pid.Error;
 	
+	output = theta + Actual;
 	if(output > 110)  output = 110;									//оч╥Ы
 	if(output < 70)	 output = 70;
 	return output;
