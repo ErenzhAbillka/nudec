@@ -1,9 +1,9 @@
-//#ifndef __TIMER_H
-//#define __TIMER_H
+#ifndef __TIMER_H
+#define __TIMER_H
 
-//extern void Implement(void);
+void Timer_Init(void);
+void Stop(void);
+void Resume(void);
+void EXTI0_IRQHandler(void);
 
-//void TIM2_Int_Init(uint16_t arr,uint16_t psc);
-//void TIM2_IRQHandler(void);
-
-//#endif
+#endif

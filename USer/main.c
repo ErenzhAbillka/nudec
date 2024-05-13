@@ -5,7 +5,8 @@
 #include "stm32f10x.h"                  // Device header
 #include "PID.h"
 #include "MATHUSE.h"
-#include "LASER.h"
+#include "TIMER.h"
+
 
 int main()
 {
@@ -13,26 +14,18 @@ int main()
 	Serial_Init();
 	OLED_Init();
 	PWM_Init();
-	Key_Init();
-	Laser_Init();
+	Timer_Init();
 	/* END */
 
 	/* 常驻外设控制*/
-	LASER_ON();
+
 	/* END */
 	while(1)
 	{
-		/* 舵机控制部分 */ 
-		float x = PID_Down();
-		float y = PID_Up();
-		
-		Servo_Down(x);
-		Servo_Up(y);
-		/* END */
-		
-		/* OLED显示 */
-		//EMPTY BODY
-		/* END */
+		OLED_ShowNum(1, 1, Serial_RxPacket[0], 3);
+		OLED_ShowNum(2, 1, Serial_RxPacket[1], 3);
+//		OLED_ShowNum(3, 1, Serial_RxPacket[2], 3);
+//		OLED_ShowNum(4, 1, Serial_RxPacket[3], 3);
 	}
 	
 }

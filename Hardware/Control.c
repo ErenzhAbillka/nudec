@@ -30,8 +30,8 @@ void Control(void)
 void Reset(void)
 {
 	PWM_Init();											//¶æ»ú1¸´Î»
-	servoOneDown(30);
-	servoOneUp(90);
+//	servoOneDown(30);
+//	servoOneUp(90);
 }
 
 void Basic_Task(void)
@@ -45,7 +45,7 @@ void Perform_Task(void)
 	float x = PID_Down();
 	float y = PID_Up();
 	
-	servoTwoDown(x);
-	servoTwoDown(y);
+//	servoTwoDown(x);
+//	servoTwoDown(y);
 	/* END */	
 }

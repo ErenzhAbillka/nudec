@@ -671,6 +671,16 @@
               <FileType>5</FileType>
               <FilePath>.\start\system_stm32f10x.h</FilePath>
             </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\timer.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -742,16 +752,6 @@
               <FilePath>.\Hardware\Control.h</FilePath>
             </File>
             <File>
-              <FileName>Laser.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\Laser.c</FilePath>
-            </File>
-            <File>
-              <FileName>Laser.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\Laser.h</FilePath>
-            </File>
-            <File>
               <FileName>Key.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Hardware\Key.c</FilePath>
@@ -760,6 +760,16 @@
               <FileName>Key.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Hardware\Key.h</FilePath>
+            </File>
+            <File>
+              <FileName>timer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\timer.h</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\timer.c</FilePath>
             </File>
           </Files>
         </Group>
