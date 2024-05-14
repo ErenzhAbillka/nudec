@@ -3,6 +3,7 @@
 #include "SERIAL.h"
 #include "CONTROL.h"
 #include "DELAY.h"
+#include "PID.h"
 
 /****
 	* ¿ØÖÆ³ÌÐò
@@ -49,7 +50,7 @@ void Perform_Task(void)
 	float x = PID_Down();
 	float y = PID_Up();
 	
-//	servoTwoDown(x);
-//	servoTwoDown(y);
+	servoTwoDown(x);
+	servoTwoDown(y);
 	/* END */	
 }

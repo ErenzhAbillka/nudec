@@ -7,6 +7,7 @@
 #include "MATHUSE.h"
 #include "TIMER.h"
 #include "KEY.h"
+#include "CONTROL.h"
 
 
 int main()
@@ -24,7 +25,6 @@ int main()
 	while(1)
 	{
 		Control();
-		OLED_ShowString(2, 1, "B");
 	}
 	
 }

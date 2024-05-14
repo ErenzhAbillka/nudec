@@ -28,16 +28,15 @@ Project File Date:  05/13/2024
 *** Using Compiler 'V5.06 update 5 (build 528)', folder: 'D:\keil5\ARM\ARMCC\Bin'
 Build target 'Target 1'
 compiling Control.c...
-Hardware\Control.c(49): warning:  #223-D: function "PID_Down" declared implicitly
-  	float x = PID_Down();
-Hardware\Control.c(50): warning:  #223-D: function "PID_Up" declared implicitly
-  	float y = PID_Up();
-Hardware\Control.c: 2 warnings, 0 errors
+compiling main.c...
+USer\main.c(26): warning:  #223-D: function "Control" declared implicitly
+  		Control();
+USer\main.c: 1 warning, 0 errors
 linking...
 .\Objects\PRoject.axf: Warning: L6304W: Duplicate input file .\objects\timer_1.o ignored.
-Program Size: Code=10906 RO-data=1950 RW-data=32 ZI-data=1656  
+Program Size: Code=10724 RO-data=428 RW-data=32 ZI-data=1656  
 Finished: 0 information, 1 warning and 0 error messages.
-".\Objects\PRoject.axf" - 0 Error(s), 3 Warning(s).
+".\Objects\PRoject.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -51,7 +50,7 @@ Package Vendor: Keil
   D:\keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>
