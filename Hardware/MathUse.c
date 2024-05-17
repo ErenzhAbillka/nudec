@@ -9,16 +9,82 @@
 	* 注意事项: angle_ConversionX()中的Distance为中心OpenMV与目标之间的垂直距离, 是由像素和实际值的转换而来
 	*/
 	
-float degreesToRadians(float rad)
+void Serial_Init(void);
+	
+float radiansToDegrees(float rad)
 {
-    float Angle;
-    float pi = 3.141592653;
 
-    Angle = 180 * rad / pi ;
+	    float Angle;
+		float pi = 3.141592653;
+
+		Angle = 180 * rad / pi ;
     
-    return Angle;
+		
+		USART_ClearITPendingBit(USART1, USART_IT_RXNE);		//清除标志位
+		return Angle;
+	
+
 }
 
+float setPointX(void)			//red__cx
+{
+	Serial_Init();
+	int rx = Serial_RxPacket[0];
+	
+	int distance, delta;
+	float setAngle_pi, setAngle_rad;
+	distance = 242;
+	delta = rx - 160;
+	setAngle_rad = atan2(delta, distance);
+	setAngle_pi = radiansToDegrees(setAngle_rad);
+	
+	return delta;
+}
+
+float setPointY(void)			//red__cy
+{
+
+	int rx = Serial_RxPacket[1];
+	
+	int distance, delta;
+	float setAngle_pi, setAngle_rad;
+	distance = 242;
+	delta = rx - 120;
+	setAngle_rad = atan2(delta, distance);
+	setAngle_pi = radiansToDegrees(setAngle_rad);
+	
+	return setAngle_pi;
+}
+
+float measurePointX(void)		//gre__dx
+{
+
+	int gx = Serial_RxPacket[2];
+	
+	int distance, delta;
+	float setAngle_pi, setAngle_rad;
+	distance = 242;
+	delta = gx - 160;
+	setAngle_rad = atan2(delta, distance);
+	setAngle_pi = radiansToDegrees(setAngle_rad);
+	
+	return setAngle_pi;
+}
+
+float measurePointY(void)		//gre__dy
+{
+
+	int gy = Serial_RxPacket[3];
+	
+	int distance, delta;
+	float setAngle_pi, setAngle_rad;
+	distance = 242;
+	delta = gy - 120;
+	setAngle_rad = atan2(delta, distance);
+	setAngle_pi = radiansToDegrees(setAngle_rad);
+	
+	return setAngle_pi;
+}
 
 //float angle_ConversionX(void)
 //{
@@ -96,7 +162,7 @@ float angle_ConversionX(void)
 	theta3 = theta1 - theta2;
 	/* END */
 	
-	output = degreesToRadians(theta3);
+	output = radiansToDegrees(theta3);
 	return output;
 }
 
@@ -135,7 +201,7 @@ float angle_ConversionY(void)
 	theta3 = theta1 - theta2;
 	/* END */
 	
-	output = degreesToRadians(theta3);
+	output = radiansToDegrees(theta3);
 	return output;
 }
 

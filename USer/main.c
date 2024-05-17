@@ -27,8 +27,11 @@ int main()
 
 	while(1)
 	{
-		float x = PID_Down();
-		float y = PID_Up();
+		float x = IncrementalPIDX();
+		float y = IncrementalPIDY();
+		
+		int a = measurePointX();
+		int b = measurePointY();
 		servoOneDown(x);
 		servoOneUp(y);
 		
@@ -39,8 +42,8 @@ int main()
 		
 		OLED_ShowNum(1, 5, x, 3);
 		OLED_ShowNum(2, 5, y, 3);
-//		OLED_ShowNum(3, 5, Down, 3);
-//		OLED_ShowNum(4, 5, Up, 3);
+		OLED_ShowNum(3, 5, a, 3);
+		OLED_ShowNum(4, 5, b, 3);
 		
 		
 	}

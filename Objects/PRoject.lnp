@@ -33,8 +33,6 @@
 ".\objects\oled.o"
 ".\objects\pid.o"
 ".\objects\mathuse.o"
-".\objects\control.o"
-".\objects\key.o"
 ".\objects\timer_1.o"
 ".\objects\main.o"
 ".\objects\stm32f10x_it.o"

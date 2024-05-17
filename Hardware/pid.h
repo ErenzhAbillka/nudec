@@ -9,11 +9,15 @@ typedef struct
 	float Error;
 	float Error_Sum;
 	float Error_Last;
+	float Error_Last2;
+	float Output_Last;
 } PID;
 
 extern PID pid;
 
-float PID_Down(void);
-float PID_Up(void);
+//float PID_Down(void);
+//float PID_Up(void);
+float IncrementalPIDX(void);
+float IncrementalPIDY(void);
 
 #endif

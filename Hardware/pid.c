@@ -28,30 +28,74 @@ float Get_AngleUp(void)
 
 void PIDX_Init(void)
 {
-	pid.kp = 0.9;
-	pid.ki = 0;
-	pid.kd = 0;
+	pid.kp = 0.8;
+	pid.ki = 0.1;
+	pid.kd = 0.2;
 	pid.Error = 0;
 	pid.Error_Sum = 0;
 	pid.Error_Last = 0;
-	
+	pid.Error_Last2 = 0;
+	pid.Output_Last = 0;
 	Serial_Init();
 	
 }
 
 void PIDY_Init(void)
 {
-	pid.kp = 0.9;
-	pid.ki = 0;
-	pid.kd = 0;
+	pid.kp = 0.8;
+	pid.ki = 0.1;
+	pid.kd = 0.2;
 	pid.Error = 0;
 	pid.Error_Sum = 0;
 	pid.Error_Last = 0;
-	
+	pid.Error_Last2 = 0;
+	pid.Output_Last = 0;	
 	Serial_Init();
 }
 
+float IncrementalPIDX(void)
+{
+	float setpoint, measure, error, output, delta;
+    setpoint = setPointX(); // 设定值
+    measure = measurePointX(); // 测量值
+    error = setpoint - measure;
+    
+    delta = pid.kp * (error - pid.Error_Last) 
+          + pid.ki * error
+          + pid.kd * (error - 2 * pid.Error_Last + pid.Error_Last2);
+    output = pid.Output_Last + delta;
+    
+    // 更新误差和输出
+    pid.Error_Last2 = pid.Error_Last;
+    pid.Error_Last = error;
+    pid.Output_Last = output;
+    
+    return output;
+}
 
+float IncrementalPIDY(void)
+{
+	float setpoint, measure, error, output, delta;
+    setpoint = setPointY(); // 设定值
+    measure = measurePointY(); // 测量值
+    error = setpoint - measure;
+    
+    delta = pid.kp * (error - pid.Error_Last) 
+          + pid.ki * error
+          + pid.kd * (error - 2 * pid.Error_Last + pid.Error_Last2);
+    output = pid.Output_Last + delta;
+    
+    // 更新误差和输出
+    pid.Error_Last2 = pid.Error_Last;
+    pid.Error_Last = error;
+    pid.Output_Last = output;
+    
+    return output;
+}
+
+
+
+/*
 
 float PID_Down(void)
 {
@@ -96,3 +140,4 @@ float PID_Up(void)
 	return output;
 }
 
+*/
