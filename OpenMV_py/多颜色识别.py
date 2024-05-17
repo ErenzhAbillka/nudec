@@ -2,8 +2,8 @@ import sensor, image, time
 from pyb import UART
 
 # 定义红色和绿色的阈值
-red_threshold = (48, 72, 23, 66, -4, 38)
-green_threshold = (64, 79, -70, -3, -20, 44)
+red_threshold = (71, 100, -74, -20, -11, 33)
+green_threshold = (80, 100, -13, 12, -39, 21)
 
 sensor.reset()
 sensor.set_pixformat(sensor.RGB565)

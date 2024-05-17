@@ -14,11 +14,23 @@
 	
 PID pid;
 
+float Get_AngleDown(void)
+{
+	float AngleDown = (float)(TIM_GetCapture2(TIM2) - 500) / 2000 * 180;	//得到实时的CCR值
+	return AngleDown - 90;
+}
+
+float Get_AngleUp(void)
+{
+	float AngleUp 	= (float)(TIM_GetCapture3(TIM2) - 500) / 2000 * 180;	//得到实时的CCR值
+	return AngleUp - 90;
+}
+
 void PIDX_Init(void)
 {
-	pid.kp = 1;
-	pid.ki = 0.2;
-	pid.kd = 2;
+	pid.kp = 0.9;
+	pid.ki = 0;
+	pid.kd = 0;
 	pid.Error = 0;
 	pid.Error_Sum = 0;
 	pid.Error_Last = 0;
@@ -29,9 +41,9 @@ void PIDX_Init(void)
 
 void PIDY_Init(void)
 {
-	pid.kp = 1;
-	pid.ki = 0.2;
-	pid.kd = 2;
+	pid.kp = 0.9;
+	pid.ki = 0;
+	pid.kd = 0;
 	pid.Error = 0;
 	pid.Error_Sum = 0;
 	pid.Error_Last = 0;
@@ -39,17 +51,7 @@ void PIDY_Init(void)
 	Serial_Init();
 }
 
-float Get_AngleDown(void)
-{
-	float AngleDown = (float)(TIM_GetCapture2(TIM2) - 500) / 2000 * 180;	//得到实时的CCR值
-	return AngleDown;
-}
 
-float Get_AngleUp(void)
-{
-	float AngleUp 	= (float)(TIM_GetCapture3(TIM2) - 500) / 2000 * 180;	//得到实时的CCR值
-	return AngleUp;
-}
 
 float PID_Down(void)
 {
@@ -61,14 +63,14 @@ float PID_Down(void)
 	pid.Error = targetAngleX - Actual;
 	pid.Error_Sum = pid.Error;
 	
-	theta = pid.kp * pid.Error
+	output = pid.kp * pid.Error
 		   + pid.ki * pid.Error_Sum
 		   + pid.kp * (pid.Error - pid.Error_Last);
 	pid.Error_Last = pid.Error;
 	
-	output = theta + Actual;
-	if(output > 50) output = 50;											//限幅								 
-	if(output < 0)	 output = 0;
+//	output = theta + Actual;
+//	if(output > 50) output = 50;											//限幅								 
+//	if(output < 0)	 output = 0;
 	return output;
 }
 
@@ -83,14 +85,14 @@ float PID_Up(void)
 	pid.Error = targetAngleY - Actual;
 	pid.Error_Sum = pid.Error;
 	
-	theta = pid.kp * pid.Error
+	output = pid.kp * pid.Error
 		   + pid.ki * pid.Error_Sum
 		   + pid.kp * (pid.Error - pid.Error_Last);
 	pid.Error_Last = pid.Error;
 	
-	output = theta + Actual;
-	if(output > 110)  output = 110;									//限幅
-	if(output < 70)	 output = 70;
+//	output = theta + Actual;
+//	if(output > 110)  output = 110;									//限幅
+//	if(output < 70)	 output = 70;
 	return output;
 }
 

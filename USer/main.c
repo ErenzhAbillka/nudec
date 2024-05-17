@@ -10,21 +10,39 @@
 #include "CONTROL.h"
 
 
+
 int main()
 {
 	/* 初始化 */
-//	Serial_Init();
+	Serial_Init();
 	OLED_Init();
 	PWM_Init();
 //	Timer_Init();
 	/* END */
 
 	/* 常驻外设控制*/
-
+	servoOneDown(0);
+	servoOneUp(0);
 	/* END */
+
 	while(1)
 	{
-		Control();
+		float x = PID_Down();
+		float y = PID_Up();
+		servoOneDown(x);
+		servoOneUp(y);
+		
+		OLED_ShowNum(1, 1, Serial_RxPacket[0], 3);
+		OLED_ShowNum(2, 1, Serial_RxPacket[1], 3);
+		OLED_ShowNum(3, 1, Serial_RxPacket[2], 3);
+		OLED_ShowNum(4, 1, Serial_RxPacket[3], 3);
+		
+		OLED_ShowNum(1, 5, x, 3);
+		OLED_ShowNum(2, 5, y, 3);
+//		OLED_ShowNum(3, 5, Down, 3);
+//		OLED_ShowNum(4, 5, Up, 3);
+		
+		
 	}
 	
 }
