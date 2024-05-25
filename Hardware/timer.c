@@ -46,7 +46,7 @@ void Timer_Init(void)
 
 void Stop(void) 
 {
-	USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);			//开启串口接收数据的中断
+	USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);			//关闭串口接收数据的中断
     isPaused = 1;
 }
 
@@ -65,3 +65,27 @@ void EXTI0_IRQHandler(void)
 			else  		    Resume();  // 执行恢复操作
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -126,26 +126,15 @@ void PWM1_SetCompare3(uint16_t Compare)
 ***********************************/
 void servoOneDown(float Angle)	//A1			
 {
-	float adjustedAngle = (Angle + 90) / 180 * 2000 + 500; // 将范围 -90 到 90 映射到 500 到 2500
+	float adjustedAngle = Angle/ 270* 2000 + 500; // 将范围 0 到 270 映射到 500 到 2500
     PWM1_SetCompare2(adjustedAngle);
 }
 
 void servoOneUp(float Angle)	//A2			
 {
-	float adjustedAngle = (Angle + 90) / 180 * 2000 + 500; // 将范围 -90 到 90 映射到 500 到 2500
+	float adjustedAngle = Angle/ 270* 2000 + 500; // 将范围 0 到 270 映射到 500 到 2500
     PWM1_SetCompare3(adjustedAngle);
 }
-
-void servoTwoDown(float Angle)	//A6			
-{
-	PWM_SetCompare1(Angle / 180 * 2000 + 500);
-}
-
-void servoTwoUp(float Angle)	//A7		
-{
-	PWM_SetCompare2(Angle / 180 * 2000 + 500);
-}
-
 
 
 
