@@ -6,6 +6,7 @@
 
 void PWM_Init(void);
 
+void LED1_ON(void);
 void servoOneDown(float Angle);
 void servoOneUp(float Angle);
 void servoTwoDown(float Angle);

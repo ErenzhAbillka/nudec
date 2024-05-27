@@ -1,61 +1,97 @@
 #include "stm32f10x.h"                  // Device header
 #include "Delay.h"
 #include "USART.h"
+#include "PROCEDURE.h"
+#include "SERIAL.h"
 
-#define	record	9
+#define record 9
 
-/**
-  * 函    数：按键初始化
-  * 参    数：无
-  * 返 回 值：无
-  */
+typedef enum {
+    Free,
+    State_B0,
+    State_B1,
+    State_B10,
+    State_B11
+} KeyState;
+
+KeyState state = Free;
+
 void Key_Init(void)
 {
-	/*开启时钟*/
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);		//开启GPIOB的时钟
+    /*开启时钟*/
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); //开启GPIOB的时钟
+
+    /*GPIO初始化*/
+    GPIO_InitTypeDef GPIO_InitStructure;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_11 | GPIO_Pin_0 | GPIO_Pin_10;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOB, &GPIO_InitStructure); //将PB1和PB11引脚初始化为上拉输入
 	
-	/*GPIO初始化*/
-	GPIO_InitTypeDef GPIO_InitStructure;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_11 | GPIO_Pin_0 | GPIO_Pin_10;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOB, &GPIO_InitStructure);						//将PB1和PB11引脚初始化为上拉输入
 }
 
-/**
-  * 函    数：按键获取键码
-  * 参    数：无
-  * 返 回 值：按下按键的键码值，范围：0~2，返回0代表没有按键按下
-  * 注意事项：此函数是阻塞式操作，当按键按住不放时，函数会卡住，直到按键松手
-  */
-uint8_t Key_GetNum(void)
+void HandleKeyState(void)
 {
-	uint8_t KeyNum = 0;		//定义变量，默认键码值为0
-	
-	if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0) == 0)			//0为按下
-	{
-		Delay_ms(500);											//延时消抖
-		KeyNum = 1;												//置键码为1
-		//if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11) == 0)	GPIO_SetBits(GPIOB, GPIO_Pin_1);
-	}
-	
-	if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) == 0)			//读PB11输入寄存器的状态，如果为0，则代表按键2按下
-	{
-		Delay_ms(20);											//延时消抖
-		while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) == 0);	//等待按键松手
-		KeyNum = 2;												//置键码为2
-	}
-	if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_10) == 0)			//0为按下
-	{
-		Delay_ms(20);
-		KeyNum = 3;												//置键码为1
-	}
-	
-	if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11) == 0)			//读PB11输入寄存器的状态，如果为0，则代表按键2按下
-	{
-		Delay_ms(20);											//延时消抖
-		KeyNum = 4;												//置键码为2
-	}
-	
-	return KeyNum;			//返回键码值，如果没有按键按下，所有if都不成立，则键码为默认值0
+    switch (state)
+    {
+        case State_B0:
+           OLED_ShowString(1, 1, "B0");
+	    Reset();
+            state = Free; // 重置状态为 Free
+            break;
+        case State_B1:
+            OLED_ShowString(1, 1, "B1");
+            TIM_Cmd(TIM2, DISABLE);
+            USART1_SendByte(9);
+            state = Free; // 重置状态为 Free
+            break;
+        case State_B10:
+            OLED_ShowString(1, 1, "B10");
+	    for(int i = 0; i <= 5; i++)		Servo_Running();
+            state = Free; // 重置状态为 Free
+            break;
+        case State_B11:
+            OLED_ShowString(1, 1, "B11");
+            USART1_SendByte(8);
+             for(int i = 0; i <= 5; i++)		Servo_Running();
+            state = Free; // 重置状态为 Free
+            break;
+        case Free:
+        default:
+            break;
+    }
 }
+
+void Key_Running(void)
+{
+    if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0) == 0 && state == Free) // 0为按下
+    {
+        Delay_ms(20); // 延时消抖
+        while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0) == 0); // 等待按键松手
+        state = State_B0;
+        HandleKeyState();
+    }
+    else if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) == 0 && state == Free) // 读PB11输入寄存器的状态，如果为0，则代表按键2按下
+    {
+        Delay_ms(20); // 延时消抖
+        while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) == 0); // 等待按键松手
+        state = State_B1;
+        HandleKeyState();
+    }
+    else if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_10) == 0 && state == Free) // 0为按下
+    {
+        Delay_ms(20);
+        while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_10) == 0); // 等待按键松手
+        state = State_B10;
+        HandleKeyState();
+    }
+    else if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11) == 0 && state == Free) // 读PB11输入寄存器的状态，如果为0，则代表按键2按下
+    {
+        Delay_ms(20); // 延时消抖
+        while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11) == 0); // 等待按键松手
+        state = State_B11;
+        HandleKeyState();
+    }
+}
+
+

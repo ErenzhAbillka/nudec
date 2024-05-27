@@ -13,6 +13,11 @@ void PWM_Init(void)
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_6 | GPIO_Pin_7; //通道1 | 通道2 | 通道2 | 通道3
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);	
 
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1; //通道3 | 通道4
@@ -83,9 +88,14 @@ void PWM_Init(void)
 
 	TIM_Cmd(TIM2, ENABLE);
 	TIM_Cmd(TIM3, ENABLE);
+	
+	GPIO_ResetBits(GPIOA, GPIO_Pin_0);				//设置PA1和PA2引脚为高电平
 }
 
-
+void LED1_ON(void)
+{
+	GPIO_SetBits(GPIOA, GPIO_Pin_0);		//设置PA1引脚为低电平
+}
 
 /***********************************
 *设定PWM

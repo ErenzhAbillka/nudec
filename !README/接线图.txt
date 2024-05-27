@@ -1,0 +1,13 @@
+A1: 云台1 -> 下舵机
+A2: 云台1 -> 上舵机
+A6: 云台2 -> 下舵机
+A7: 云台2 -> 上舵机	
+A9:   OpenMV -> P0
+A10: OpenMV -> P1
+
+B0:	Key
+B1:	Key
+B10:	Key
+B11:	Key
+
+Stm32_GND -> OpenMV_GND

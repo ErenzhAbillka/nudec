@@ -722,36 +722,6 @@
               <FilePath>.\Hardware\OLED_Font.h</FilePath>
             </File>
             <File>
-              <FileName>pid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\pid.c</FilePath>
-            </File>
-            <File>
-              <FileName>pid.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\pid.h</FilePath>
-            </File>
-            <File>
-              <FileName>MathUse.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\MathUse.c</FilePath>
-            </File>
-            <File>
-              <FileName>MathUse.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\MathUse.h</FilePath>
-            </File>
-            <File>
-              <FileName>timer.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\timer.h</FilePath>
-            </File>
-            <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\timer.c</FilePath>
-            </File>
-            <File>
               <FileName>Key.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Hardware\Key.c</FilePath>
@@ -760,6 +730,16 @@
               <FileName>Key.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Hardware\Key.h</FilePath>
+            </File>
+            <File>
+              <FileName>Procedure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\Procedure.c</FilePath>
+            </File>
+            <File>
+              <FileName>Procedure.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\Procedure.h</FilePath>
             </File>
           </Files>
         </Group>

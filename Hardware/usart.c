@@ -6,13 +6,14 @@
 	* 与OpenMV通信，采用USART
 	* 帧头: 0x2C, 0x04
 	* 帧尾: 0x5B
-	* OpenMV数据: cx, cy, dx, dy (c:红色激光坐标, d:绿色激光坐标)
+	* OpenMV数据:	 奇数: x坐标	偶数: y坐标	
 	* 引脚设置: PA9: Rx, PA10: Tx
 	*/
 	
 uint8_t flag;							//标志
 
 uint8_t Serial_RxPacket[10];				//定义接收数据包数组
+uint8_t Serial_RxPacket9[10];
 uint8_t Serial_RxFlag;					//定义接收数据包标志位
 
 /**
@@ -37,7 +38,9 @@ void Serial_Init(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;			//将PA10引脚初始化为 上拉输入
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);					
+	GPIO_Init(GPIOA, &GPIO_InitStructure);	
+
+		
 	
 	/*USART初始化*/
 	USART_InitTypeDef USART_InitStructure;					//定义结构体变量
@@ -49,9 +52,6 @@ void Serial_Init(void)
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;		//字长，选择8位
 	USART_Init(USART1, &USART_InitStructure);				//将结构体变量交给USART_Init，配置USART1
 	
-	/*中断输出配置*/
-	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);			//开启串口  接收数据   的中断
-	
 	/*NVIC中断分组*/
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);			//配置NVIC为分组2
 	
@@ -62,6 +62,9 @@ void Serial_Init(void)
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;		//指定NVIC线路的抢占优先级为1
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;		//指定NVIC线路的响应优先级为1
 	NVIC_Init(&NVIC_InitStructure);							//将结构体变量交给NVIC_Init，配置NVIC外设
+	
+	/*中断输出配置*/
+	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);			//开启串口  接收数据   的中断
 	
 	/*USART使能*/
 	USART_Cmd(USART1, ENABLE);								//使能USART1，串口开始运行
@@ -106,15 +109,25 @@ void USART1_IRQHandler(void)
 		{
 				RxState = 2;
 		}
+		else if (RxState == 1 && RxData == 0x05)
+		{
+				RxState = 4;
+		}
+		
 		/*当前状态为1，接收数据包数据*/
 		else if (RxState == 2)
 		{
 			Serial_RxPacket[pRxPacket] = RxData;	//将数据存入数据包数组的指定位置
 			pRxPacket ++;				//数据包的位置自增
-			if (pRxPacket >= 4)			//如果收够4个数据
-			{
+			if (pRxPacket >= 10)			//如果收够4个数据
 				RxState = 3;			//置下一个状态
-			}
+		}
+		else if (RxState == 4)
+		{
+			Serial_RxPacket9[pRxPacket] = RxData;	//将数据存入数据包数组的指定位置
+			pRxPacket ++;				//数据包的位置自增
+			if (pRxPacket >= 10)			//如果收够4个数据
+				RxState = 3;			//置下一个状态
 		}
 		/*当前状态为2，接收数据包包尾*/
 		else if (RxState == 3 && RxData == 0x5B)
